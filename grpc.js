@@ -4,7 +4,7 @@ const { config } = require('dotenv')
 // Load credentials from .env
 config()
 
-const c8 = new Camunda8({})
+const c8 = new Camunda8()
 const zeebe = c8.getZeebeGrpcApiClient()
 
 zeebe
