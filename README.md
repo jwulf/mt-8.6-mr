@@ -21,7 +21,7 @@ docker compose up -d
 To demonstrate the gRPC API: 
 
 * Install dependencies: `npm i`
-* Run `node app.js`
+* Run `node grpc.js`
 
 Output: 
 
@@ -37,7 +37,7 @@ Succeeds. Credentials used are in `.env`. Client id is `zeebe`, client secret is
 
 To demonstrate the REST API:
 
-* Run `bash app.sh`
+* Run `bash rest.sh`
 
 Output: 
 
@@ -45,4 +45,4 @@ Output:
 {"type":"about:blank","title":"UNAUTHORIZED","status":401,"detail":"Expected to handle request Deploy Resources with tenant identifier 'green', but tenant is not authorized to perform this request","instance":"/v2/deployments"}    
 ```
 
-Fails. Credentials used are in `app.sh`. Client id is `zeebe`, client secret is `zecret`.
+Fails. Credentials used are in `rest.sh`. Client id is `zeebe`, client secret is `zecret`.
