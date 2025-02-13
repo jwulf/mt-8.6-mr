@@ -1,0 +1,1 @@
+docker-compose -f docker/docker-compose-multitenancy-rest-auth.yaml up -d
