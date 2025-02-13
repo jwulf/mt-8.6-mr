@@ -4,7 +4,7 @@ A minimal reproducer for an API security configuration issue in Camunda 8.7.0-al
 
 ## Background
 
-This came up while addressing a customer support issue ([SUPPORT-25519](https://jira.camunda.com/browse/SUPPORT-25519)). Unauthenticated workers were not backing off and their polling cause denial-of-service of the gateway. 
+This came up while addressing a customer support issue ([SUPPORT-25519](https://jira.camunda.com/browse/SUPPORT-25519)). Unauthenticated workers were not backing off and their polling caused denial-of-service of the gateway. 
 
 In implementing a backoff on UNAUTHENTICATED, I needed to create a test case that creates the backpressure signal of UNAUTHENTICATED when the worker is not authorized.
 
@@ -34,7 +34,7 @@ There are two docker compose configurations.
 
 One is `docker/docker-compose-multitenancy-rest-no-auth.yaml`. This is the long-standing configuration file used for testing the Node.js SDK, particularly the gRPC API. The gRPC API is secured in this configuration, but it has issues with the security of the REST API - particularly that it ignores authorization headers and allows access to the REST API. This can be started with `./start-no-auth.yaml`.
 
-The other is `docker/docker-compose-multitenancy-rest-auth.yaml`. This one contains the changes noted in [this Slack thread](https://camunda.slack.com/archives/C06UKS51QV9/p1728566872581979?thread_ts=1728049950.299819&cid=C06UKS51QV9). You can see the difference on lines 36-40 of [the file](docker/docker-compose-multitenancy-rest-auth.yaml). It is an attempt to secure the REST API, but it does not function as expected. This one can be started with `./start-auth.sh`.
+The other is `docker/docker-compose-multitenancy-rest-auth.yaml`. This one contains the changes noted in [this Slack thread](https://camunda.slack.com/archives/C06UKS51QV9/p1728566872581979?thread_ts=1728049950.299819&cid=C06UKS51QV9). You can see the difference on lines 36-40 of [the file](docker/docker-compose-multitenancy-rest-auth.yaml#L33). It is an attempt to secure the REST API, but it does not function as expected. This one can be started with `./start-auth.sh`.
 
 Either configuration can be brought down with `./stop.sh`. Note that this script will prompt you for permission to prune docker volumes that are not owned by a running container. You can say No to this if you have volumes that you need to keep, in which case you will need to clean up the volumes yourself.
 
@@ -42,10 +42,14 @@ Either configuration can be brought down with `./stop.sh`. Note that this script
 
 The tests are a matrix of: 
 
-Two APIs: REST and gRPC
-Two Tenants: `<default>` and `green`
-Three methods: `topology`, `activateJobs`, `deployResources`
-Four scenarios: Authorized (`auth`), No Authorization header passed (`no-auth`), Expired token passed as Authorization header (`expired-token`), Invalid credentials (`invalid-credentials`).
+* Two APIs: REST and gRPC
+* Two Tenants: `<default>` and `green`
+* Three methods: `topology`, `activateJobs`, `deployResources`
+* Four scenarios: 
+    - Authorized (`auth`)
+    - No Authorization header passed (`no-auth`)
+    - Expired token passed as Authorization header (`expired-token`)
+    - Invalid credentials (`invalid-credentials`)
 
 This gives us 48 tests in total - 24 for the REST API, 24 for the gRPC API.
 
