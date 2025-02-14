@@ -24,5 +24,5 @@ const zeebe = c8.getZeebeGrpcApiClient()
 
 describe('Invalid credentials gRPC client (default tenant)', () => {
     test('cannot get topology', async () =>
-        await expect(async () => zeebe.getTopology()).rejects.toThrow())
+        await expect(async () => zeebe.topology()).rejects.toThrow())
 })

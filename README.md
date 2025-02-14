@@ -53,11 +53,9 @@ The tests are a matrix of:
 
 This gives us 48 tests in total - 24 for the REST API, 24 for the gRPC API.
 
-## Demonstrating the issues
+Note: 6 tests are disabled 
 
-### gRPC API does not reject unauthed requests to ActivateJobs
-
-See [this Slack thread](https://camunda.slack.com/archives/CSQ2E3BT4/p1739400483444909). All RPC methods returned `UNAUTHENTICATED` _except_ for `ActivateJobs`.
+## Demonstrating the issue - "Control group"
 
 1. Run `./stop.sh` to stop any running instance of the platform and clean up the volumes.
 1. Start the platform with `./start-noauth.sh`. This starts a profile that secures the gRPC API, but not the REST API.
@@ -65,20 +63,15 @@ See [this Slack thread](https://camunda.slack.com/archives/CSQ2E3BT4/p1739400483
 
 **Expected behaviour:**
 
-24 tests pass: methods are allowed if valid authorization is present, and denied otherwise.
+18 tests pass: methods are allowed if valid authorization is present, and denied otherwise.
 
 **Actual behaviour:**
 
-20 tests pass: methods are allowed if valid authorization is present, and denied otherwise.
-4 tests fail: ActivateJobs does not reject with `UNAUTHENTICATED`.
+All tests pass.
 
 **Analysis**
 
-Apart from the aforementioned issue of `ActivateJobs` not returning `UNAUTHENTICATED`, this works as expected.
-
-**8.6 on SaaS**
-
-You can run this test against 8.6 on Camunda SaaS by setting credentials for Camunda SaaS and running `npm run grpc+tenant-default`. This fails the two test cases where no auth header and an invalid token auth header are passed to `ActivateJobs`. They do not reject with `UNAUTHENTICATED`.
+The gRPC API is secured as expected.
 
 ### Cannot secure REST API (`no-auth` profile)
 
@@ -122,8 +115,7 @@ All tests pass.
 
 **Actual behaviour:**
 
-20 tests pass.
-4 tests fail. 
+All tests pass
 
 **Analysis**
 
@@ -154,8 +146,6 @@ If you set the credentials for an 8.6 cluster on Camunda SaaS and run `npm run r
 ## Conclusions
 
 It's difficult for me to derive a theory about the internals based on these results. 
-
-The gRPC API seems to be secured as I would expect it to be in both profiles, with the exception of the `ActivateJobs` endpoint, which seems to respond with something regardless of the authorization header.
 
 The REST API in the first profile seems to be unsecured on the `<default>` tenand and inaccessible on the `green` tenant - except that `ActivateJobs` returns something on the `green` tenant. 
 

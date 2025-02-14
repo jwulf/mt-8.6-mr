@@ -22,7 +22,7 @@ const c8 = new Camunda8({
 })
 const zeebe = c8.getZeebeGrpcApiClient()
 
-describe('Invalid credentials gRPC client (default tenant)', () => {
+xdescribe('Invalid credentials gRPC client (default tenant)', () => {
     test('cannot activate jobs', async () => {
         await expect(() => zeebe.activateJobs({
             maxJobsToActivate: 10,

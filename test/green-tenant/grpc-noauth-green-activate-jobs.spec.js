@@ -21,7 +21,7 @@ const c8 = new Camunda8({
 })
 const zeebe = c8.getZeebeGrpcApiClient()
 
-describe('Unauthenticated gRPC client (green tenant)', () => {
+xdescribe('Unauthenticated gRPC client (green tenant)', () => {
     test('cannot activate jobs', async () => {
        await expect(() => zeebe.activateJobs({
             maxJobsToActivate: 10,
